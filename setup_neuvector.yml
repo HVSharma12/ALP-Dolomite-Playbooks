@@ -1,0 +1,59 @@
+---
+# This Ansible playbook is used to manage the NeuVector workload on a ALP host.
+# The steps are based on : https://build.opensuse.org/package/view_file/SUSE:ALP:Workloads/neuvector-demo/README.md?expand=1
+# and https://documentation.suse.com/alp/micro/html/alp-micro/available-alp-workloads.html#task-run-neuvector-with-podman
+# The playbook supports setup of NeuVector.
+
+- name: Running the NeuVector workload
+  hosts: alphost
+  become: true
+  vars:
+    workload:
+      name: neuvector
+      image: registry.opensuse.org/suse/alp/workloads/bci_containerfiles/suse/alp/workloads/neuvector-demo:latest
+
+  tasks:
+    - name: Install required packages, if any, for workload {{ workload.name }}
+      ansible.builtin.package:
+        name: python3-selinux
+        state: present
+      notify: Reboot
+
+    - name: Reboot right now if necessary
+      ansible.builtin.meta: flush_handlers
+
+    - name: Set SELinux into permissive mode
+      ansible.posix.selinux:
+        policy: targeted
+        state: permissive
+
+    - name: Retrieve image for workload {{ workload.name }}
+      containers.podman.podman_image:
+        name: "{{ workload.image }}"
+        state: present
+
+    - name: Execute nevector runlabel INSTALL
+      ansible.builtin.command: >-
+        podman container runlabel install {{ workload.image }}
+      register: workload_runlabel_install
+      changed_when:
+        - ('already exist' not in workload_runlabel_install.stdout)
+
+    - name: Enable and start NeuVector service
+      ansible.builtin.systemd:
+        name: neuvector.service
+        state: started
+        enabled: true
+
+    - name: Print message connect to NeuVector
+      ansible.builtin.debug:
+        msg: >-
+          NeuVector is running on https://{{ ansible_default_ipv4.address }}:8443
+          You need to accept the warning about the self-signed SSL certificate
+          and log in with the following default credentials: admin / admin.
+
+  handlers:
+    - name: Reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        post_reboot_delay: 60
