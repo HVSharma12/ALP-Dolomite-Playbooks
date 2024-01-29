@@ -1,0 +1,61 @@
+---
+# Playbook to install docker and add users to docker group on ALP-Dolomite
+
+- name: Install Docker on ALP-Dolomite.
+  hosts: alphost
+  become: true
+  vars:
+    docker_users: []
+
+  tasks:
+    - name: Ensure old versions of Docker is not installed.
+      ansible.builtin.package:
+        name: docker
+        state: absent
+
+    - name: Ensure required packages are installed.
+      ansible.builtin.package:
+        name:
+          - docker
+          - container-selinux
+        state: present
+      notify: Reboot
+
+    - name: Reboot right now if necessary
+      ansible.builtin.meta: flush_handlers
+
+    - name: Ensure Docker is started and enabled.
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Docker user management
+      when:
+        - docker_users | length > 0
+      block:
+        - name: Get docker group info using getent.
+          ansible.builtin.getent:
+            database: group
+            key: docker
+            split: ":"
+
+        - name: Check if there are any users to add to the docker group.
+          ansible.builtin.set_fact:
+            at_least_one_user_to_modify: true
+          when:
+            - item not in ansible_facts.getent_group["docker"][2]
+          with_items: "{{ docker_users }}"
+
+        - name: Ensure docker users are added to the docker group.
+          ansible.builtin.user:
+            name: "{{ item }}"
+            groups: docker
+            append: true
+          with_items: "{{ docker_users }}"
+
+  handlers:
+    - name: Reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        post_reboot_delay: 60
