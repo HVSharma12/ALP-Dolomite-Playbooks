@@ -1,0 +1,15 @@
+---
+app_name: wordpress-test-app
+wordpress_volume: wordpress
+
+image:
+  wordpress: docker.io/library/wordpress
+  mariadb: registry.opensuse.org/opensuse/mariadb
+
+database:
+  user: wordpress_user
+  database: db
+  password: database_password
+  root_password: database_root_password
+  host: mariadb
+  volume: mariadb

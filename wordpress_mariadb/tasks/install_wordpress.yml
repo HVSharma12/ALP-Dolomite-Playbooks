@@ -1,0 +1,25 @@
+---
+
+- name: Retrieve wordpress image
+  containers.podman.podman_image:
+    name: "{{ image.wordpress }}"
+    state: present
+
+- name: Create wordpress data volume
+  containers.podman.podman_volume:
+    name: "{{ wordpress_volume }}"
+
+- name: Run wordpress container
+  containers.podman.podman_container:
+    name: wordpress
+    image: "{{ image.wordpress }}"
+    pod: "{{ app_name }}"
+    restart_policy: always
+    volume:
+      - "{{ wordpress_volume }}:/var/www/html"
+    env:
+      WORDPRESS_DB_USER: "{{ database.user }}"
+      WORDPRESS_DB_NAME: "{{ database.database }}"
+      WORDPRESS_DB_PASSWORD: "{{ database.password }}"
+      WORDPRESS_DB_HOST: "{{ database.host }}"
+    state: started

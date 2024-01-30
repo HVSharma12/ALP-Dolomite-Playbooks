@@ -1,0 +1,7 @@
+---
+
+- name: Setup mariadb
+  ansible.builtin.include_tasks: install_mariadb.yml
+
+- name: Setup wordpress
+  ansible.builtin.include_tasks: install_wordpress.yml

@@ -1,0 +1,33 @@
+---
+
+- name: Retrieve mariadb image {{ image.mariadb }}
+  containers.podman.podman_image:
+    name: "{{ image.mariadb }}"
+    state: present
+
+- name: Create MariaDB data volume
+  containers.podman.podman_volume:
+    name: "{{ database.volume }}"
+
+- name: Create a app pod
+  containers.podman.podman_pod:
+    name: "{{ app_name }}"
+    infra: true
+    publish:
+      - "8080:80"
+    network: bridge
+
+- name: Run MariaDB container
+  containers.podman.podman_container:
+    name: "{{ database.host }}"
+    image: registry.opensuse.org/opensuse/mariadb
+    pod: "{{ app_name }}"
+    restart_policy: always
+    env:
+      MYSQL_USER: "{{ database.user }}"
+      MYSQL_PASSWORD: "{{ database.password }}"
+      MYSQL_DATABASE: "{{ database.database }}"
+      MYSQL_ROOT_PASSWORD: "{{ database.root_password }}"
+    volume:
+      - "{{ database.volume }}:/var/lib/mysql:Z"
+    state: started
