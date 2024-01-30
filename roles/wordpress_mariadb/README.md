@@ -2,7 +2,7 @@
 
 ## Description
 
-This Ansible role is designed to simplify the installation and configuration of containerized MariaDB and WordPress on ALP-Dolomite using podman. It streamlines the setup process, ensuring that you have a sample WordPress site up and running quickly.
+This Ansible role is designed to simplify the installation of containerized MariaDB and WordPress on ALP-Dolomite using podman. It streamlines the setup process, ensuring that you have a sample WordPress site up and running quickly.
 
 ## Role Variables
 

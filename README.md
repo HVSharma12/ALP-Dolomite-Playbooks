@@ -12,8 +12,8 @@ Here is a list of available playbooks:
 | `setup_firewalld.yml`           | Set up the Firewalld service.                       |
 | `setup_kea_dhcp_server.yml`     | Configure and deploy Kea DHCP Server.               |
 | `setup_keylime.yml`             | Setup Keylime for ALP-Dolomite.                    |
-| `setup_cockpit.yml`             | Install and configure Cockpit.                      |
-| `setup_grafana.yml`             | Configure and deploy Grafana.                       |
+| `setup_cockpit.yml`             | Install Cockpit.                      |
+| `setup_grafana.yml`             | Deploy Grafana.                       |
 | `setup_kea_dhcpv6_server.yml`   | Configure and deploy Kea DHCPv6 Server.            |
 | `setup_neuvector.yml`           | Setup NeuVector for ALP-Dolomite.                  |
 
@@ -23,7 +23,7 @@ Here are the Ansible roles included in this repository:
 
 | Role Name                      | Description                                          |
 |---------------------------------|------------------------------------------------------|
-| `wordpress_mariadb`            | This role simplifies the installation and configuration of containerized MariaDB and WordPress on ALP-Dolomite using podman. |
+| `wordpress_mariadb`            | This role simplifies the installation of containerized MariaDB and WordPress on ALP-Dolomite using podman. |
 
 ## Usage
 
