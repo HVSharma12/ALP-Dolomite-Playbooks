@@ -17,10 +17,6 @@
       ansible.builtin.package:
         name: python3-selinux
         state: present
-      notify: Reboot
-
-    - name: Reboot right now if necessary
-      ansible.builtin.meta: flush_handlers
 
     - name: Set SELinux into permissive mode
       ansible.posix.selinux:
@@ -51,9 +47,3 @@
           NeuVector is running on https://{{ ansible_default_ipv4.address }}:8443
           You need to accept the warning about the self-signed SSL certificate
           and log in with the following default credentials: admin / admin.
-
-  handlers:
-    - name: Reboot
-      ansible.builtin.reboot:
-        reboot_timeout: 600
-        post_reboot_delay: 60

@@ -19,10 +19,6 @@
           - docker
           - container-selinux
         state: present
-      notify: Reboot
-
-    - name: Reboot right now if necessary
-      ansible.builtin.meta: flush_handlers
 
     - name: Ensure Docker is started and enabled.
       ansible.builtin.service:
@@ -53,9 +49,3 @@
             groups: docker
             append: true
           with_items: "{{ docker_users }}"
-
-  handlers:
-    - name: Reboot
-      ansible.builtin.reboot:
-        reboot_timeout: 600
-        post_reboot_delay: 60

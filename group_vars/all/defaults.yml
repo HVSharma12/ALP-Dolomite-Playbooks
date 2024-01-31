@@ -1,0 +1,73 @@
+---
+workloads_list:
+  workloads:
+    # podman pull registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/ansible:latest
+    - name: ansible
+      container:
+        name: ansible
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: cockpit-ws
+      container:
+        name: cockpit-ws
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: firewalld
+      container:
+        name: firewalld
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: grafana
+      container:
+        name: grafana
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: kea
+      container:
+        name: kea
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: neuvector
+      container:
+        name: neuvector
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall
+
+    - name: keylime-control-plane
+      container:
+        name: keylime-control-plane
+        registry: registry.opensuse.org
+        path: suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads
+        version: latest
+      labels:
+        install: install
+        uninstall: uninstall

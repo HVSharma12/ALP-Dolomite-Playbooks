@@ -17,13 +17,9 @@
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
-      notify: Reboot
       loop:
         - cockpit-bridge
         - cockpit-tukit
-
-    - name: Reboot right now if necessary
-      ansible.builtin.meta: flush_handlers
 
     - name: Retrieve image for workload {{ workload.name }}
       containers.podman.podman_image:
@@ -48,9 +44,3 @@
         msg: >-
           Cockpit Web UI is running on https://{{ ansible_default_ipv4.address }}:9090
           Please accept the warning about the self-signed SSL certificate to access it.
-
-  handlers:
-    - name: Reboot
-      ansible.builtin.reboot:
-        reboot_timeout: 600
-        post_reboot_delay: 60

@@ -1,0 +1,9 @@
+---
+# Use a cache dir in /var/tmp to avoid path resolution issues
+# when switching between different users.
+alp_cache_dir: "{{ ['', 'var', 'tmp', 'alp'] | join('/') }}"
+
+alp:
+  cache:
+    images: "{{ [alp_cache_dir, 'images'] | join('/') }}"
+    workloads: "{{ [alp_cache_dir, 'workloads'] | join('/') }}"
