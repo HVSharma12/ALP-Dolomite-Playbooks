@@ -29,3 +29,6 @@ Here is an example playbook demonstrating how to use this role:
 - hosts: alphost
   roles:
     - wordpress_mariadb
+
+## Author
+HVSharma12
