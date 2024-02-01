@@ -1,0 +1,14 @@
+---
+- name: Install workloads for ALP
+  hosts: alphost
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Include role for installing workloads
+      ansible.builtin.include_role:
+        name: install_alp_workloads
+        tasks_from: install_workload.yml
+      loop_control:
+        loop_var: workload
+      loop: "{{ workloads | default(workloads_list.workloads) }}"

@@ -1,6 +1,6 @@
 ---
 
-- name: Setup and install packages
+- name: Install required packages
   hosts: alphost
   vars:
     package_installer_role_switches:

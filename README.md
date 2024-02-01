@@ -16,7 +16,7 @@ Here is a list of available playbooks:
 | `setup_grafana.yml`             | Deploy Grafana.                       |
 | `setup_kea_dhcpv6_server.yml`   | Configure and deploy Kea DHCPv6 Server.            |
 | `setup_neuvector.yml`           | Setup NeuVector for ALP-Dolomite.                  |
-
+| `package_installer.yml`         | Playbook for package_installer role                |
 ## Roles
 
 Here are the Ansible roles included in this repository:
@@ -24,6 +24,8 @@ Here are the Ansible roles included in this repository:
 | Role Name                      | Description                                          |
 |---------------------------------|------------------------------------------------------|
 | `wordpress_mariadb`            | This role simplifies the installation of containerized MariaDB and WordPress on ALP-Dolomite using podman. |
+| `package_installer`            | This role simplifies managin packages for ALP-Dolomite |
+| `install_alp_workloads`        | This role installs containerized workloads on ALP-Dolomite |
 
 ## Usage
 
