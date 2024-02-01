@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Ansible role facilitates the installation of various ALP workloads containers. It ensures the necessary infrastructure is in place and manages container images effectively.
+This Ansible role facilitates the installation of various ALP workload containers. It ensures the necessary infrastructure is in place and manages container images effectively.
 
 ## Requirements
 
@@ -31,8 +31,12 @@ workloads_list:
         install: install
         uninstall: uninstall
 ```
-Additional workloads are defined in a similar fashion.
+Additional workloads are defined similarly.
 
 ## Basic Usage
 
 To use this role, you will typically run the install_alp_workloads.yml Ansible playbook, which includes this role and specifies any necessary variables or overrides.
+
+## Authors
+- Original Author: rtamalin
+- Modifications by: HVSharma12
