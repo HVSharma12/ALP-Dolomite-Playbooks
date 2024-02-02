@@ -1,0 +1,16 @@
+---
+- name: Create and manage Podman pods
+  containers.podman.podman_pod:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('started') }}"
+    publish: "{{ item.publish | default(omit) }}"
+    hostname: "{{ item.hostname | default(omit) }}"
+    infra: "{{ item.infra | default(true) }}"
+    network: "{{ item.network | default(omit) }}"
+    ports: "{{ item.ports | default(omit) }}"
+    share: "{{ item.share | default(omit) }}"
+    volume: "{{ item.volumes | default(omit) }}"
+    debug: "{{ item.debug | default(false) }}"
+    recreate: "{{ item.recreate | default(false) }}"
+  loop: "{{ podman_pods }}"
+  when: podman_pods is defined

@@ -1,0 +1,49 @@
+---
+- name: Deploy Podman Networks and Containers
+  hosts: alptestvm
+  become: true
+  vars:
+    podman_networks:
+      - name: wordpress_network
+        driver: bridge
+
+    podman_volumes:
+      - name: wordpress_data_volume
+      - name: mariadb_data_volume
+
+    podman_pods:
+      - name: wordpress-test-app
+        publish:
+          - "8080:80"
+        network: bridge
+        infra: true
+
+    podman_containers:
+      - name: mariadb
+        image: "registry.opensuse.org/opensuse/mariadb:latest"
+        volume:
+          - "mariadb_data_volume:/var/lib/mysql:Z"
+        env:
+          MYSQL_USER: "wordpress_user"
+          MYSQL_PASSWORD: "wordpress_password"
+          MYSQL_DATABASE: "wordpress_db"
+          MYSQL_ROOT_PASSWORD: "mariadb_root_password"
+        restart_policy: always
+        pod: wordpress-test-app
+
+      - name: wordpress
+        image: "docker.io/library/wordpress:latest"
+        volume:
+          - "wordpress_data_volume:/var/www/html"
+        env:
+          WORDPRESS_DB_USER: "wordpress_user"
+          WORDPRESS_DB_PASSWORD: "wordpress_password"
+          WORDPRESS_DB_NAME: "wordpress_db"
+          WORDPRESS_DB_HOST: "mariadb"
+        restart_policy: always
+        pod: wordpress-test-app
+
+  tasks:
+    - name: Include the role
+      ansible.builtin.include_role:
+        name: podman_containers

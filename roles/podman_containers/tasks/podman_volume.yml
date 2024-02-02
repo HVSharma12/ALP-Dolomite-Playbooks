@@ -1,0 +1,11 @@
+---
+- name: Manage Podman volumes
+  containers.podman.podman_volume:
+    name: "{{ item.name }}"
+    driver: "{{ item.driver | default('local') }}"
+    label: "{{ item.label | default(omit) }}"
+    options: "{{ item.options | default(omit) }}"
+    recreate: "{{ item.recreate | default(false) }}"
+    state: "{{ item.state | default('present') }}"
+    debug: "{{ item.debug | default(false) }}"
+  loop: "{{ podman_volumes }}"

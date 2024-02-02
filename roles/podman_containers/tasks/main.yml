@@ -1,0 +1,16 @@
+---
+- name: Include podman_network.yml
+  ansible.builtin.include_tasks: podman_network.yml
+  when: podman_networks | default([]) | length > 0
+
+- name: Include podman_volume.yml
+  ansible.builtin.include_tasks: podman_volume.yml
+  when: podman_volumes | default([]) | length > 0
+
+- name: Include podman_pod.yml
+  ansible.builtin.include_tasks: podman_pod.yml
+  when: podman_pods | default([]) | length > 0
+
+- name: Include podman_container.yml
+  ansible.builtin.include_tasks: podman_container.yml
+  when: podman_containers | default([]) | length > 0
