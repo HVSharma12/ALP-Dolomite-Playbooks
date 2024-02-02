@@ -1,7 +1,17 @@
 ---
+- name: Retrieve image for Grafana
+  containers.podman.podman_image:
+    name: "{{ grafana_image }}"
+    state: present
+
+- name: Initialize the environment
+  containers.podman.podman_runlabel:
+    image: "{{ grafana_image }}"
+    label: INSTALL
+
 - name: Start and enable Grafana using systemd
   ansible.builtin.service:
-    name: grafana
+    name: "{{ workload.name }}"
     state: started
     enabled: true
 

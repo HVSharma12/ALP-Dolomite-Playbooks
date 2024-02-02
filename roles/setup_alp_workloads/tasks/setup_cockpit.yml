@@ -1,5 +1,28 @@
 ---
-- name: Ensure service can be started for workload {{ workload.name }}
+- name: Install required packages, if any, for workload cockpit
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  notify: Reboot
+  loop:
+    - cockpit-bridge
+    - cockpit-tukit
+    - "-cockpit-ws"
+
+- name: Reboot right now if necessary
+  ansible.builtin.meta: flush_handlers
+
+- name: Retrieve image for workload cockpit
+  containers.podman.podman_image:
+    name: "{{ cockpit_image }}"
+    state: present
+
+- name: Install Cockpit Web server container
+  containers.podman.podman_runlabel:
+    image: "{{ cockpit_image }}"
+    label: INSTALL
+
+- name: Ensure service can be started for workload cockpit
   ansible.builtin.systemd_service:
     name: "cockpit.service"
     state: "started"

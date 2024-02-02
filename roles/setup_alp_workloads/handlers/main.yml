@@ -4,3 +4,8 @@
   register: kea_reload_result
   changed_when:
     - '"INFO/keactrl: Reloading kea-dhcp4..." in kea_reload_result.stdout'
+
+- name: Reboot
+  ansible.builtin.reboot:
+    reboot_timeout: 600
+    post_reboot_delay: 60

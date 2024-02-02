@@ -1,0 +1,7 @@
+---
+cockpit_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/cockpit-ws:latest
+firewalld_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_images/suse/alp/workloads/firewalld:latest
+grafana_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/grafana:latest
+kea_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/kea:latest
+keylime_image: registry.opensuse.org/devel/microos/containers/containerfile/opensuse/keylime-control-plane:latest
+neuvector_image: registry.opensuse.org/suse/alp/workloads/bci_containerfiles/suse/alp/workloads/neuvector-demo:latest

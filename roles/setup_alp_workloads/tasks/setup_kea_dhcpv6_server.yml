@@ -1,4 +1,14 @@
 ---
+- name: Pull the Kea DHCP server container image
+  containers.podman.podman_image:
+    name: "{{ kea_image }}"
+    state: present
+
+- name: Install all required parts of the Kea workload
+  containers.podman.podman_runlabel:
+    image: "{{ kea_image }}"
+    label: INSTALL
+
 - name: Add firewall exception rule for DHCP
   ansible.posix.firewalld:
     service: dhcpv6

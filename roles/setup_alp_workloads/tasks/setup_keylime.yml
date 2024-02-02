@@ -1,8 +1,18 @@
 ---
+- name: Retrieve images for Keylime
+  containers.podman.podman_image:
+    name: "{{ keylime_image }}"
+    state: present
+
 - name: Create the keylime-control-plane volume
   containers.podman.podman_volume:
     name: keylime-control-plane-volume
     state: present
+
+- name: Start the Keylime container and related services
+  containers.podman.podman_runlabel:
+    image: "{{ keylime_image }}"
+    label: INSTALL
 
 - name: Check Keylime container status
   containers.podman.podman_container_info:

@@ -1,4 +1,28 @@
 ---
+- name: Install required packages, if any, for workload
+  ansible.builtin.package:
+    name: python3-selinux
+    state: present
+  notify: Reboot
+
+- name: Reboot right now if necessary
+  ansible.builtin.meta: flush_handlers
+
+- name: Set SELinux into permissive mode
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
+- name: Retrieve image for workload
+  containers.podman.podman_image:
+    name: "{{ neuvector_image }}"
+    state: present
+
+- name: Execute nevector runlabel INSTALL
+  containers.podman.podman_runlabel:
+    image: "{{ neuvector_image }}"
+    label: INSTALL
+
 - name: Enable and start NeuVector service
   ansible.builtin.systemd:
     name: neuvector.service

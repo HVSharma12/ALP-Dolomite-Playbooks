@@ -1,4 +1,23 @@
 ---
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: "rpm"
+
+- name: Fail if firewalld is installed locally
+  ansible.builtin.fail:
+    msg: "Firewalld is installed locally. Please remove it before installing this container."
+  when: "'firewalld' in ansible_facts.packages"
+
+- name: Retrieve image for workload
+  containers.podman.podman_image:
+    name: "{{ firewalld_image }}"
+    state: present
+
+- name: Initialize the environment
+  containers.podman.podman_runlabel:
+    image: "{{ firewalld_image }}"
+    label: INSTALL
+
 - name: Ensure polkit daemon is restarted (if necessary)
   ansible.builtin.service:
     name: polkit
@@ -8,7 +27,7 @@
 
 - name: Start and enable firewalld using systemd
   ansible.builtin.service:
-    name: firewalld
+    name: "{{ workload.name }}"
     state: started
     enabled: true
 
