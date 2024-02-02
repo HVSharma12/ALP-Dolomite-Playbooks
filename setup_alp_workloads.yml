@@ -6,7 +6,7 @@
     - role: setup_alp_workloads
       vars:
         setup_cockpit: true
-        setup_firewalld: false
+        setup_firewalld: true
         setup_grafana: true
         setup_keylime: true
         setup_kea_dhcpv6_server: true

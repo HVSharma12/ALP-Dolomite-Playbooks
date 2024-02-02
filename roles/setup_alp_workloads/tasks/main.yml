@@ -24,7 +24,7 @@
   when: setup_kea_dhcpv6_server
 
 - name: Setup kea_dhcpv4_server
-  ansible.builtin.include_tasks: setup_kea_dhcpv4_server.yml
+  ansible.builtin.include_tasks: setup_kea_dhcp_server.yml
   when: setup_kea_dhcpv4_server
 
 - name: Setup neuvector

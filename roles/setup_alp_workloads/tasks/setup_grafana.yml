@@ -11,7 +11,7 @@
 
 - name: Start and enable Grafana using systemd
   ansible.builtin.service:
-    name: "{{ workload.name }}"
+    name: grafana
     state: started
     enabled: true
 

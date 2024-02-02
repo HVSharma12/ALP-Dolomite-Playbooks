@@ -17,17 +17,18 @@
   containers.podman.podman_runlabel:
     image: "{{ firewalld_image }}"
     label: INSTALL
+  register: workload_runlabel_install
 
 - name: Ensure polkit daemon is restarted (if necessary)
   ansible.builtin.service:
     name: polkit
     state: restarted
   when:
-    - "'etc/polkit-1/actions/org.fedoraproject.FirewallD1.policy' in workload_runlabel_install.stdout"
+    - workload_runlabel_install is changed
 
 - name: Start and enable firewalld using systemd
   ansible.builtin.service:
-    name: "{{ workload.name }}"
+    name: firewalld
     state: started
     enabled: true
 
