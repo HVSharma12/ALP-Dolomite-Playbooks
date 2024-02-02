@@ -9,3 +9,4 @@
     state: "{{ item.state | default('present') }}"
     debug: "{{ item.debug | default(false) }}"
   loop: "{{ podman_volumes }}"
+  when: podman_volumes is defined

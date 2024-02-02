@@ -1,0 +1,14 @@
+---
+- name: Setup ALP workloads
+  hosts: alptestvm
+  become: true
+  roles:
+    - role: setup_alp_workloads
+      vars:
+        setup_cockpit: true
+        setup_firewalld: false
+        setup_grafana: true
+        setup_keylime: true
+        setup_kea_dhcpv6_server: true
+        setup_kea_dhcpv4_server: true
+        setup_neuvector: true

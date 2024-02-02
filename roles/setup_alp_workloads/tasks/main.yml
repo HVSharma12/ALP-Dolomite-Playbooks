@@ -1,0 +1,32 @@
+---
+- name: Setup Cockpit
+  ansible.builtin.include_tasks: setup_cockpit.yml
+  when: setup_cockpit
+
+- name: Setup Firewalld
+  ansible.builtin.include_tasks: setup_firewalld.yml
+  when: setup_firewalld
+
+- name: Setup GNOME Display Manager
+  ansible.builtin.include_tasks: setup_gnome_display_manager.yml
+  when: setup_gnome_display_manager
+
+- name: Setup Grafana
+  ansible.builtin.include_tasks: setup_grafana.yml
+  when: setup_grafana
+
+- name: Setup keylime
+  ansible.builtin.include_tasks: setup_keylime.yml
+  when: setup_keylime
+
+- name: Setup kea_dhcpv6_server.yml
+  ansible.builtin.include_tasks: setup_kea_dhcpv6_server.yml
+  when: setup_kea_dhcpv6_server
+
+- name: Setup kea_dhcpv4_server
+  ansible.builtin.include_tasks: setup_kea_dhcpv4_server.yml
+  when: setup_kea_dhcpv4_server
+
+- name: Setup neuvector
+  ansible.builtin.include_tasks: setup_neuvector.yml
+  when: setup_neuvector

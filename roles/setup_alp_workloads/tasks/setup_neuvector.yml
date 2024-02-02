@@ -1,0 +1,13 @@
+---
+- name: Enable and start NeuVector service
+  ansible.builtin.systemd:
+    name: neuvector.service
+    state: started
+    enabled: true
+
+- name: Print message connect to NeuVector
+  ansible.builtin.debug:
+    msg: >-
+      NeuVector is running on https://{{ ansible_default_ipv4.address }}:8443
+      You need to accept the warning about the self-signed SSL certificate
+      and log in with the following default credentials: admin / admin.

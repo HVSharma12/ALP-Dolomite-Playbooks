@@ -1,0 +1,20 @@
+---
+- name: Add firewall exception rule for DHCP
+  ansible.posix.firewalld:
+    service: dhcpv6
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Configure Kea DHCPv6 using template
+  ansible.builtin.template:
+    src: "kea-dhcp6.conf.j2"
+    dest: "/etc/kea/kea-dhcp6.conf"
+    mode: "0644"
+  notify: Reload Kea configuration
+
+- name: Start Kea DHCPv6 server using systemd
+  ansible.builtin.systemd:
+    name: kea-dhcp6.service
+    state: started
+    enabled: true

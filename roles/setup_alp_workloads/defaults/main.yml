@@ -1,0 +1,10 @@
+---
+setup_cockpit: false
+setup_firewalld: false
+setup_gnome_display_manager: false
+setup_grafana: false
+setup_kea_dhcp_server: false
+setup_kea_dhcpv6_server: false
+setup_keylime: false
+setup_libvirt_host: false
+setup_neuvector: false

@@ -7,6 +7,14 @@
   ansible.builtin.include_tasks: podman_volume.yml
   when: podman_volumes | default([]) | length > 0
 
+- name: Include podman_image.yml
+  ansible.builtin.include_tasks: podman_image.yml
+  when: podman_images | default([]) | length > 0
+
+- name: Include podman_runlabel
+  ansible.builtin.include_tasks: podman_runlabel.yml
+  when: podman_runlabel | default([]) | length > 0
+
 - name: Include podman_pod.yml
   ansible.builtin.include_tasks: podman_pod.yml
   when: podman_pods | default([]) | length > 0

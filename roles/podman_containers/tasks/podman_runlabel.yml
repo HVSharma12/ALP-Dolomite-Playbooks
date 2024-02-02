@@ -1,0 +1,8 @@
+---
+- name: Run label from specified image
+  containers.podman.podman_runlabel:
+    image: "{{ item.image }}"
+    label: "{{ item.label | default('INSTALL') }}"
+    executable: "{{ item.executable | default(omit) }}"
+  loop: "{{ podman_runlabel }}"
+  when: podman_runlabel is defined

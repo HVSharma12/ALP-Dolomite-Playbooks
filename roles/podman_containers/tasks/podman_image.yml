@@ -1,0 +1,36 @@
+---
+- name: Example task for pulling, building, or pushing Podman images
+  containers.podman.podman_image:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    arch: "{{ item.arch | default(omit) }}"
+    auth_file: "{{ item.auth_file | default(omit) }}"
+    build:
+      annotation: "{{ item.build.annotation | default(omit) }}"
+      cache: "{{ item.build.cache | default(omit) }}"
+      extra_args: "{{ item.build.extra_args | default(omit) }}"
+      file: "{{ item.build.file | default(omit) }}"
+      force_rm: "{{ item.build.force_rm | default(omit) }}"
+      format: "{{ item.build.format | default(omit) }}"
+      rm: "{{ item.build.rm | default(true) }}"
+      target: "{{ item.build.target | default(omit) }}"
+      volume: "{{ item.build.volume | default(omit) }}"
+    ca_cert_dir: "{{ item.ca_cert_dir | default(omit) }}"
+    executable: "{{ item.executable | default('podman') }}"
+    force: "{{ item.force | default(false) }}"
+    password: "{{ item.password | default(omit) }}"
+    path: "{{ item.path | default(omit) }}"
+    pull: "{{ item.pull | default(true) }}"
+    push: "{{ item.push | default(false) }}"
+    push_args:
+      compress: "{{ item.push_args.compress | default(omit) }}"
+      dest: "{{ item.push_args.dest | default(omit) }}"
+      format: "{{ item.push_args.format | default(omit) }}"
+      remove_signatures: "{{ item.push_args.remove_signatures | default(omit) }}"
+      sign_by: "{{ item.push_args.sign_by | default(omit) }}"
+      transport: "{{ item.push_args.transport | default(omit) }}"
+    tag: "{{ item.tag | default('latest') }}"
+    username: "{{ item.username | default(omit) }}"
+    validate_certs: "{{ item.validate_certs | default(true) }}"
+  loop: "{{ podman_images }}"
+  when: podman_images is defined

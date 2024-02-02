@@ -1,0 +1,20 @@
+---
+- name: Add firewall exception rule for DHCP
+  ansible.posix.firewalld:
+    service: dhcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Configure Kea DHCPv4 using template
+  ansible.builtin.template:
+    src: "kea-dhcp4.conf.j2"
+    dest: "/etc/kea/kea-dhcp4.conf"
+    mode: "0644"
+  notify: Reload Kea configuration
+
+- name: Start Kea DHCPv4 server using systemd
+  ansible.builtin.systemd:
+    name: kea-dhcp4.service
+    state: started
+    enabled: true
