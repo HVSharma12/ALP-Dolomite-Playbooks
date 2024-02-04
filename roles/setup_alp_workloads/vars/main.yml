@@ -5,3 +5,4 @@ grafana_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfile
 kea_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/kea:latest
 keylime_image: registry.opensuse.org/devel/microos/containers/containerfile/opensuse/keylime-control-plane:latest
 neuvector_image: registry.opensuse.org/suse/alp/workloads/bci_containerfiles/suse/alp/workloads/neuvector-demo:latest
+ansible_image: registry.opensuse.org/suse/alp/workloads/tumbleweed_containerfiles/suse/alp/workloads/ansible:latest

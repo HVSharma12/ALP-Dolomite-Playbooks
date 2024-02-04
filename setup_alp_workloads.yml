@@ -5,10 +5,11 @@
   roles:
     - role: setup_alp_workloads
       vars:
-        setup_cockpit: true
-        setup_firewalld: true
-        setup_grafana: true
-        setup_keylime: true
-        setup_kea_dhcpv6_server: true
-        setup_kea_dhcpv4_server: true
-        setup_neuvector: true
+        setup_cockpit: false
+        setup_firewalld: false
+        setup_grafana: false
+        setup_keylime: false
+        setup_kea_dhcpv6_server: false
+        setup_kea_dhcpv4_server: false
+        setup_neuvector: false
+        setup_ansible: true

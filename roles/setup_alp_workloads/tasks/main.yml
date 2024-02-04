@@ -30,3 +30,7 @@
 - name: Setup neuvector
   ansible.builtin.include_tasks: setup_neuvector.yml
   when: setup_neuvector
+
+- name: Setup Ansible
+  ansible.builtin.include_tasks: setup_ansible.yml
+  when: setup_ansible

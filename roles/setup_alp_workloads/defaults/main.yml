@@ -8,3 +8,4 @@ setup_kea_dhcpv6_server: false
 setup_keylime: false
 setup_libvirt_host: false
 setup_neuvector: false
+setup_ansible: false
