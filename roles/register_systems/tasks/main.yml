@@ -1,0 +1,49 @@
+---
+- name: Fail if not running as root
+  ansible.builtin.fail:
+    msg: "This role needs to be executed as root"
+  when: ansible_user_uid != 0
+
+- name: Check If transactional-update Is Available
+  ansible.builtin.stat:
+    path: /usr/sbin/transactional-update
+  register: transactional_update_check
+
+- name: Fail If transactional-update Not Available
+  ansible.builtin.fail:
+    msg: "This role requires transactional-update to be available and executable"
+  when: not transactional_update_check.stat.exists or not transactional_update_check.stat.isreg
+
+- name: Check registration status
+  ansible.builtin.command:
+    cmd: "transactional-update register --status-text"
+  register: registration_status_output
+  changed_when: false
+
+- name: Set registration status
+  ansible.builtin.set_fact:
+    registration_status: "{{ registration_status_output.stdout | regex_search('Installed Products:(?:.|\\n)*?(\\bRegistered\\b|\\bNot Registered\\b)', '\\1') | first }}"
+  when: registration_status_output.stdout is defined
+
+- name: Register System with SUSE Customer Center
+  ansible.builtin.command: >-
+    transactional-update register -r {{ suse_registration_code }}
+    -e {{ suse_email_address }}{{ ' --url ' + suse_registration_server_url if suse_registration_server_url else '' }}
+  when:
+    - suse_registration_code is defined
+    - suse_email_address is defined
+    - not suse_deregister | default(false) | bool
+    - registration_status != 'Registered' or reregister
+  register: registration_output
+  changed_when: "'Successfully registered system' in registration_output.stdout"
+  notify: Reboot system
+
+- name: Deregister System
+  ansible.builtin.command: >-
+    "transactional-update register -d"
+  when:
+    - suse_deregister | bool
+    - registration_status != 'Not Registered'
+  register: deregistration_output
+  changed_when: "'Successfully deregistered system' in deregistration_output.stdout"
+  notify: Reboot system

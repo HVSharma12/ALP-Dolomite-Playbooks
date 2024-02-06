@@ -19,6 +19,7 @@ Here are the Ansible roles included in this repository:
 | `wordpress_mariadb`            | This role simplifies the installation of containerized MariaDB and WordPress on ALP-Dolomite using podman. |
 | `package_installer`            | This role simplifies managin packages for ALP-Dolomite |
 | `podman_containers`            | This role manages the entire lifecycle of Podman containers and their dependencies, such as networks, volumes, and pods. |
+| `setup_alp_workloads`          | This role installs containerized ALP workloads         |
 
 ## Usage
 

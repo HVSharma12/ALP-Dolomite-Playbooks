@@ -1,0 +1,6 @@
+---
+suse_registration_server_url: []
+reregister: false
+
+# do not remove subscriptions by default
+suse_deregister: false
