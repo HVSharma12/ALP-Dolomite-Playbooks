@@ -1,0 +1,6 @@
+---
+- name: Switch from wicked to NetworkManager
+  hosts: all
+  become: true
+  roles:
+    - role: switch-from-wicked-to-networkmanager

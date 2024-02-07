@@ -1,0 +1,25 @@
+---
+- name: Install NetworkManager
+  ansible.builtin.package:
+    name: NetworkManager
+    state: present
+
+- name: Remove wicked and wicked-service
+  ansible.builtin.package:
+    name:
+      - wicked
+      - wicked-service
+    state: absent
+  register: wicked_remove
+  notify: Reboot system
+
+- name: Conditionally notify the reboot handler
+  ansible.builtin.meta: flush_handlers
+  when: nm_install is changed or wicked_remove is changed
+
+- name: Enable NetworkManager service
+  ansible.builtin.systemd:
+    name: NetworkManager
+    enabled: true
+    state: started
+#to-do add support to migrate wicked configuration located in /etc/wicked/*.xml.
