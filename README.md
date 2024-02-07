@@ -8,7 +8,7 @@ Here is a list of available playbooks:
 
 | Playbook Name                   | Description                                          |
 |---------------------------------|------------------------------------------------------|
-| `package_installer.yml`         | Playbook for package_installer role                |
+| `setup_docker.yml`         | Playbook installing docker                                |
 
 ## Roles
 
@@ -16,8 +16,8 @@ Here are the Ansible roles included in this repository:
 
 | Role Name                      | Description                                          |
 |---------------------------------|------------------------------------------------------|
-| `wordpress_mariadb`            | This role simplifies the installation of containerized MariaDB and WordPress on ALP-Dolomite using podman. |
-| `package_installer`            | This role simplifies managin packages for ALP-Dolomite |
+| `wordpress_mariadb`            | This role simplifies the installation of containerized MariaDB and WordPress using podman. |
+| `register_systems`            | This Ansible role facilitates the registration and deregistration processes for SUSE Linux Enterprise Micro systems |
 | `podman_containers`            | This role manages the entire lifecycle of Podman containers and their dependencies, such as networks, volumes, and pods. |
 | `setup_alp_workloads`          | This role installs containerized ALP workloads         |
 

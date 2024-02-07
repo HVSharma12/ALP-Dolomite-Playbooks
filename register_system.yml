@@ -1,9 +1,0 @@
----
-- name: Register and Manage SLE Micro Systems
-  hosts: alptestvm
-  become: true # Necessary for root privileges
-  vars:
-    suse_registration_code: ""
-    suse_email_address: ""
-  roles:
-    - register_systems
