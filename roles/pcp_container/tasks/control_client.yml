@@ -1,0 +1,14 @@
+---
+- name: Deploy collector containers for recording metrics from remote systems
+  containers.podman.podman_container:
+    name: "{{ pcp_container_name }}"
+    image: "{{ pcp_image }}"
+    systemd: always
+    privileged: true
+    network_mode: host
+    state: "{{ pcp_container_state | default('started') }}"
+    env:
+      PCP_SERVICES: pmcd
+      HOST_MOUNT: /host
+    volumes:
+      - "/:/host:ro,rslave"

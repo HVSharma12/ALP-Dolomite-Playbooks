@@ -20,6 +20,7 @@ Here are the Ansible roles included in this repository:
 | `register_systems`            | This Ansible role facilitates the registration and deregistration processes for SUSE Linux Enterprise Micro systems |
 | `podman_containers`            | This role manages the entire lifecycle of Podman containers and their dependencies, such as networks, volumes, and pods. |
 | `setup_alp_workloads`          | This role installs containerized ALP workloads         |
+| `pcp_container`                | The `pcp-container` role is designed to deploy Performance Co-Pilot (PCP) containers |
 
 ## Usage
 

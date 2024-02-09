@@ -1,0 +1,43 @@
+---
+- name: Create directory for each client to store recorded logs
+  ansible.builtin.file:
+    path: "{{ pcp_archives_dir }}/{{ client }}"
+    state: directory
+    mode: "644"
+  when: pcp_container_state | default('started') != 'absent'
+
+- name: Create pmlogger configuration file for each client
+  ansible.builtin.template:
+    src: "control.CLIENT.j2"
+    dest: "{{ pcp_archives_dir }}/{{ client }}/control.{{ client }}"
+    mode: "644"
+  when: pcp_container_state | default('started') != 'absent'
+
+- name: Run PCP container with custom configurations
+  containers.podman.podman_container:
+    name: "{{ pcp_container_name }}-{{ client }}"
+    image: "{{ pcp_image }}"
+    systemd: always
+    privileged: true
+    env:
+      PCP_SERVICES: pmlogger
+    volumes:
+      - "{{ pcp_archives_dir }}:/var/log/pcp/pmlogger:z"
+      - "{{ pcp_archives_dir }}/{{ client }}/control.{{ client }}:/etc/pcp/pmlogger/control.d/local:z"
+    state: "{{ pcp_container_state | default('started') }}"
+    restart_policy: always
+    generate_systemd: "{{ {'path': '/etc/systemd/system/', 'restart_policy': 'always', 'names': true} if generate_systemd else omit }}"
+  register: create_container
+
+- name: Reload systemd to recognize new units
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: create_container is changed and generate_systemd
+
+- name: Enable and start systemd service for PCP container
+  ansible.builtin.systemd:
+    name: "container-{{ pcp_container_name }}-{{ client }}"
+    enabled: true
+    state: started
+  when: create_container is changed and generate_systemd
+# to-do add options for custom pmcd deamon config

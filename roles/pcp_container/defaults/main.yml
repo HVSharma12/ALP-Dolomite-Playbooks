@@ -1,0 +1,7 @@
+---
+pcp_image: "registry.suse.com/suse/pcp:latest"
+pcp_container_name: "metrics_collector"
+pcp_archives_dir: /var/pcp-archives
+generate_systemd: false
+monitoring_system: false
+pcp_clients: []

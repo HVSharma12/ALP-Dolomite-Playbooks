@@ -1,0 +1,10 @@
+---
+- name: Apply role to hosts
+  hosts: all
+  become: true
+  vars:
+    monitoring_system: true
+    generate_systemd: false
+    pcp_clients: []
+  roles:
+    - role: pcp_container

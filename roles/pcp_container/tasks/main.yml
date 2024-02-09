@@ -1,0 +1,12 @@
+---
+
+- name: Include monitoring_system.yml if monitoring_system is true
+  ansible.builtin.include_tasks: monitoring_system.yml
+  when: monitoring_system|bool
+  loop: "{{ pcp_clients }}"
+  loop_control:
+    loop_var: client
+
+- name: Include control_client.yml if monitoring_system is not true
+  ansible.builtin.include_tasks: control_client.yml
+  when: not monitoring_system|bool
