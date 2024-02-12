@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: build_images
+      vars:
+        git_image: "registry.suse.com/suse/git:latest"
+        application_name: "petclinic-app"
+        application_repo: "https://github.com/dockersamples/spring-petclinic-docker.git"
+        application_branch: "main"
+        application_version: "1.0.0"

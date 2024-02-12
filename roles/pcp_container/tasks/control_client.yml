@@ -1,4 +1,14 @@
 ---
+- name: Delete existing container image
+  containers.podman.podman_image:
+    name: "{{ pcp_container_name }}"
+    state: absent
+
+- name: Retrieve image for PCP
+  containers.podman.podman_image:
+    name: "{{ pcp_container_name }}"
+    state: present
+
 - name: Deploy collector containers for recording metrics from remote systems
   containers.podman.podman_container:
     name: "{{ pcp_container_name }}"

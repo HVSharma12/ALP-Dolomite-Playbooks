@@ -1,0 +1,45 @@
+---
+- name: Retrieve git image
+  containers.podman.podman_image:
+    name: "{{ git_image }}"
+    state: present
+
+- name: Create a temporary location
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: "container_build_"
+  register: temp_location
+
+- name: Show temporary location
+  ansible.builtin.debug:
+    msg: "{{ temp_location.path }}"
+
+- name: Run a git checkout using podman container
+  containers.podman.podman_container:
+    name: "{{ application_name }}_git"
+    image: "{{ git_image }}"
+    command: "git clone -b {{ application_branch }} {{ application_repo }} /git"
+    volumes:
+      - "{{ temp_location.path }}:/git:Z"
+    state: started
+    recreate: true
+    detach: false
+    workdir: "/git"
+
+- name: Delete existing application container image with the same name and tag
+  containers.podman.podman_image:
+    name: "{{ application_name }}"
+    tag: "{{ application_version }}"
+    state: absent
+
+- name: Build new conatiner image
+  containers.podman.podman_image:
+    name: "{{ application_name }}"
+    tag: "{{ application_version }}"
+    path: "{{ temp_location.path }}"
+    state: present
+
+- name: Delete temporary location
+  ansible.builtin.file:
+    path: "{{ temp_location.path }}"
+    state: absent

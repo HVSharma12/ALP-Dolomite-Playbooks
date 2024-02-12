@@ -1,0 +1,6 @@
+---
+git_image: "registry.suse.com/suse/git:latest"
+application_name: ""
+application_repo: ""
+application_branch: ""
+application_version: ""

@@ -42,9 +42,7 @@ The following example playbook demonstrates how to apply the pcp-container role 
 
 ## Role Tasks Overview
 Main Tasks
-
-    Monitoring System Inclusion: Includes tasks from monitoring_system.yml for each specified client if monitoring_system is set to true.
-    Control Client Inclusion: Includes tasks from control_client.yml if monitoring_system is not true.
+Monitoring System Inclusion: Includes tasks from monitoring_system.yml for each specified client if monitoring_system is set to true. Control Client Inclusion: Includes tasks from control_client.yml if monitoring_system is not true.
 
 ## Monitoring System Tasks
 

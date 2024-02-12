@@ -13,6 +13,11 @@
     mode: "644"
   when: pcp_container_state | default('started') != 'absent'
 
+- name: Retrieve image for PCP
+  containers.podman.podman_image:
+    name: "{{ pcp_container_name }}"
+    state: present
+
 - name: Run PCP container with custom configurations
   containers.podman.podman_container:
     name: "{{ pcp_container_name }}-{{ client }}"
