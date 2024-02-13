@@ -1,11 +1,17 @@
 ---
-- hosts: all
+- name: Build new version of images
+  hosts: all
   become: true
   roles:
     - role: build_images
       vars:
         git_image: "registry.suse.com/suse/git:latest"
-        application_name: "petclinic-app"
-        application_repo: "https://github.com/dockersamples/spring-petclinic-docker.git"
-        application_branch: "main"
+        application_name: "demo-nodejs"
+        application_repo: "https://github.com/dockersamples/todolist-node.git"
+        application_branch: "master"
         application_version: "1.0.0"
+        container_registry_url: "docker.io"
+        container_image_repository: "hvsharma12"
+
+      vars_file:
+        - vars/registry_credentials.yml

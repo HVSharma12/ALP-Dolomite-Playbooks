@@ -1,0 +1,4 @@
+---
+- name: Integration and other tests
+  ansible.builtin.debug:
+    msg: "Your tests can be uncluded here..."

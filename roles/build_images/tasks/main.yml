@@ -43,3 +43,9 @@
   ansible.builtin.file:
     path: "{{ temp_location.path }}"
     state: absent
+
+- name: Include tests
+  ansible.builtin.include_tasks: run_test.yml
+
+- name: Push image to registry
+  ansible.builtin.include_tasks: push_images.yml

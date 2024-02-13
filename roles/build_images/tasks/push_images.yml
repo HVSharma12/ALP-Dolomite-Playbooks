@@ -1,0 +1,18 @@
+---
+- name: Login to registry
+  containers.podman.podman_login:
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+    registry: "{{ container_registry_url }}"
+
+- name: Push container image to registry
+  containers.podman.podman_image:
+    name: "{{ application_name }}"
+    tag: "{{ application_version }}"
+    push: true
+    push_args:
+      dest: "{{ container_image_repository }}/{{ application_name }}:{{ application_version }}"
+
+- name: Logout from registry
+  containers.podman.podman_logout:
+    registry: "{{ container_registry_url }}"

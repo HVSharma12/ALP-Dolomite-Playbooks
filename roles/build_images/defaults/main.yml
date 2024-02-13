@@ -4,3 +4,7 @@ application_name: ""
 application_repo: ""
 application_branch: ""
 application_version: ""
+container_registry_url: ""
+container_image_repository: ""
+registry_username: "" #use ansible vault to store
+registry_password: "" #use ansible vault to store tokern value
