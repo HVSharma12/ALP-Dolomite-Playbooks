@@ -1,47 +1,78 @@
-# Ansible Role for SUSE System Registration Management
+SUSEConnect
+===========
 
-This Ansible role facilitates the registration and deregistration processes for SUSE Linux Enterprise Micro systems with the SUSE Customer Center or a specified local registration server. It automates the use of the `transactional-update` command to ensure your systems are registered for updates and support, requiring root privileges and the presence of the `transactional-update` utility on the target system.
+Use this role to connect a SUSE Linux system to the SUSE Customer Center or a local SMT server. You can also specify which add-on products are to be registered.
 
-## Requirements
+Requirements
+------------
 
-- **Ansible 2.9+**: Tested with Ansible 2.9 and higher versions.
-- **Root Access**: Execution requires root privileges.
-- **Transactional Update Utility**: The `transactional-update` must be installed and available on the target system.
+You'll need the registration key that came with your SUSE subscription. For some products you'll need extra registration keys. You'll also need to know the internal product name of the product you're trying to register. I'll try to provide a full list in [PRODUCTS.md](PRODUCTS.md).
 
-## Role Variables
+Role Variables
+--------------
 
-- `suse_registration_code`: Your SUSE registration code.
-- `suse_email_address`: Email associated with your SUSE account.
-- `suse_registration_server_url`: (Optional) URL of a local registration server.
-- `reregister`: Boolean, set to `true` to re-register the system.
-- `suse_deregister`: Boolean, set to `true` for system deregistration.
+You can set the following variables:
 
-## Tasks Overview
+| Variable                            | Type   | Description                                                                                 |
+|-------------------------------------|--------|---------------------------------------------------------------------------------------------|
+| `suseconnect_products:`             | list   | products that should be activated on the target system                                      |
+| `  - product:`                      | string | internal product name, see [PRODUCTS.md](PRODUCTS.md) for a list                            |
+| `    version:`                      | string | product version that should be activated, defaults to the major version of the base os      |
+| `    arch:`                         | string | architecture of the product to be actived, defaults to the arch of the OS (ansible_machine) |
+| `    key:`                          | string | if the product needs an additional registration key                                         |
+| `suseconnect_reregister:`           | bool   | register all products regardless of current status                                          |
+| `suseconnect_remove_subscriptions:` | bool   | remove currently registered products, absent in `suseconnect_products`                      |
 
-1. **Pre-requisites Verification**: Ensures execution as root and checks for `transactional-update`.
-2. **Registration Status**: Checks and sets the current system registration status.
-3. **System Registration**: Registers or re-registers the system.
-4. **System Deregistration**: Deregisters the system if required.
-5. **Conditional Reboot**: Reboots the system if necessary.
+This variable is used, but should not be set by the user:
 
-## Example Playbook
+| Variable                            | Type   | Description                                                                                 |
+|-------------------------------------|--------|---------------------------------------------------------------------------------------------|
+| `suseconnect_binary:`               | string | path of the SUSEConnect binary                                                              |
+
+Dependencies
+------------
+
+None.
+
+Example Task
+------------
+
+Register a SLES system and activate a bunch of extensions:
 
 ```yaml
-- name: Manage SUSE System Registration
-  hosts: all
-  become: true
+- name: Register with SCC
+  include_role:
+    name: b1-systems.suseconnect
   vars:
-    suse_registration_code: 'YOUR_REGISTRATION_CODE_HERE'
-    suse_email_address: 'YOUR_EMAIL_ADDRESS_HERE'
-    suse_registration_server_url: 'https://suse_register.example.com/'
-    reregister: false
-    suse_deregister: false
-  tasks:
-    - name: Include SUSE System Registration Role
-      ansible.builtin.include_role:
-        name: suse_system_registration
+    suseconnect_products:
+      - product: 'SLES'
+        version: '{{ ansible_distribution_version }}'
+        key: '{{ sles_registration_key }}'
+      - product: 'sle-module-basesystem'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-server-applications'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-desktop-applications'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-development-tools'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-containers'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-server-applications'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'sle-module-web-scripting'
+        version: '{{ ansible_distribution_version }}'
+      - product: 'PackageHub'
+        version: '{{ ansible_distribution_version }}'
 ```
 
-## Author Information
+License
+-------
 
-This role was originally created by Sebastian Meyer. Enhancements and the addition of the transactional-update functionality were contributed by HVSharma.
+GPLv3
+
+Author Information
+------------------
+
+Sebastian Meyer (meyer@b1-systems.de)
+B1 Systems GmbH

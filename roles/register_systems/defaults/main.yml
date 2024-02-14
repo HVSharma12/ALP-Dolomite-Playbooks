@@ -1,6 +1,12 @@
 ---
-suse_registration_server_url: []
-reregister: false
+# defaults file for b1-systems.suseconnect
+suseconnect_products: []
+suseconnect_status: {}
+suseconnect_reregister: False
+suseconnect_register_only_products: False
 
 # do not remove subscriptions by default
-suse_deregister: false
+suseconnect_remove_subscriptions: false
+
+perform_reboot: false
+activate_live_patching: false

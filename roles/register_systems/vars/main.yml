@@ -1,0 +1,3 @@
+---
+suseconnect_binary: "/usr/sbin/SUSEConnect"
+transactional_update_binary: "/usr/sbin/transactional-update register"

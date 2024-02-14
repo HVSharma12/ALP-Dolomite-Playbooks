@@ -4,46 +4,91 @@
     msg: "This role needs to be executed as root"
   when: ansible_user_uid != 0
 
-- name: Check If transactional-update Is Available
+- name: Check if system is transactional_update
   ansible.builtin.stat:
     path: /usr/sbin/transactional-update
-  register: transactional_update_check
+  register: transactional_update_stat
 
-- name: Fail If transactional-update Not Available
+- name: Check if SUSE connect is available
+  ansible.builtin.stat:
+    path: "{{ suseconnect_binary }}"
+  register: suseconnect_bin_check
+
+- name: Fail if SUSE connect not available
   ansible.builtin.fail:
-    msg: "This role requires transactional-update to be available and executable"
-  when: not transactional_update_check.stat.exists or not transactional_update_check.stat.isreg
+    msg: "This role needs SUSEConnect available and executable!"
+  when:
+    - ( suseconnect_bin_check.stat.executable is defined and not suseconnect_bin_check.stat.executable) or
+      ( suseconnect_bin_check.stat.xusr is defined and not suseconnect_bin_check.stat.xusr)
 
-- name: Check registration status
-  ansible.builtin.command:
-    cmd: "transactional-update register --status-text"
-  register: registration_status_output
+- name: Save registration status into temp var
+  ansible.builtin.command: "{{ suseconnect_binary }} -s"
+  register: _suseconnect_status
   changed_when: false
 
-- name: Set registration status
+- name: Convert Registration Status Into Usable Data Structure
   ansible.builtin.set_fact:
-    registration_status: "{{ registration_status_output.stdout | regex_search('Installed Products:(?:.|\\n)*?(\\bRegistered\\b|\\bNot Registered\\b)', '\\1') | first }}"
-  when: registration_status_output.stdout is defined
+    suseconnect_status: |
+      {{ suseconnect_status | combine({
+      item['identifier']: {
+        'status': item['status'],
+        'version': item['version'],
+        'arch': item['arch']
+      }}) }}
+  with_items: "{{ _suseconnect_status['stdout'] | default([]) }}"
 
-- name: Register System with SUSE Customer Center
-  ansible.builtin.command: >-
-    transactional-update register -r {{ suse_registration_code }}
-    -e {{ suse_email_address }}{{ ' --url ' + suse_registration_server_url if suse_registration_server_url else '' }}
+- name: Generate List Of Product Names
+  ansible.builtin.set_fact:
+    suseconnect_product_list: "{{ suseconnect_products | map(attribute='product') | list }}"
+
+- name: Set correct binary for transactional_update
+  ansible.builtin.set_fact:
+    suseconnect_binary: "{{ transactional_update_binary }}"
+  when: transactional_update_stat.stat.exists
+
+- name: Add Subscriptions
+  ansible.builtin.command: |
+    {{ suseconnect_binary }} -p
+    {{ item['product'] | default(ansible_distribution) }}/
+    {{- item['version'] | default(ansible_distribution_version) }}/
+    {{- item['arch'] | default(ansible_machine) }}
+    {%- if item['key'] is defined %} -r {{ item['key'] }}{% endif %}
   when:
-    - suse_registration_code is defined
-    - suse_email_address is defined
-    - not suse_deregister | default(false) | bool
-    - registration_status != 'Registered' or reregister
-  register: registration_output
-  changed_when: "'Successfully registered system' in registration_output.stdout"
-  notify: Reboot system
+    - ( suseconnect_status[item['product'] | default(ansible_distribution)] is not defined or
+      ( suseconnect_status[item['product'] | default(ansible_distribution)]['status'] != 'Registered' or
+      ( item['version'] is defined and suseconnect_status[item['product'] | default(ansible_distribution)]['version']|string != item['version']|string ))) or
+      suseconnect_reregister
+  with_items: "{{ suseconnect_products }}"
+  changed_when: false
+
+- name: Remove Subscriptions
+  ansible.builtin.command: |
+    {{ suseconnect_binary }} -d -p
+    {{- item['key'] | default(ansible_distribution) }}/
+    {{- item['value']['version'] | default(ansible_distribution_version) }}/
+    {{- item['value']['arch'] | default(ansible_machine) }}
+  when:
+    - suseconnect_remove_subscriptions | bool
+    - item['key'] not in suseconnect_product_list
+    - suseconnect_product_list | length > 0
+  with_dict: "{{ suseconnect_status }}"
+  changed_when: false
 
 - name: Deregister System
-  ansible.builtin.command: >-
-    "transactional-update register -d"
+  ansible.builtin.command: "{{ suseconnect_binary }} -d"
   when:
-    - suse_deregister | bool
-    - registration_status != 'Not Registered'
-  register: deregistration_output
-  changed_when: "'Successfully deregistered system' in deregistration_output.stdout"
+    - suseconnect_product_list | length == 0
+    - suseconnect_status['SLES']['status'] != 'Not Registered'
+  changed_when: false
+
+- name: Completing activation of the SUSE Linux Enterprise Live Patching
+  ansible.builtin.include_tasks: activate_live_patching.yml
+  when: activate_live_patching
+
+- name: Check condition notify reboot handler
+  ansible.builtin.debug:
+    msg: "Reboot condition met, notifying handler."
+  when:
+    - perform_reboot
+    - transactional_update_stat.stat.exists
   notify: Reboot system

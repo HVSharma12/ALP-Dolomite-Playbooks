@@ -1,0 +1,18 @@
+---
+- name: Configure libzypp for live patching
+  ansible.builtin.blockinfile:
+    path: /etc/zypp/zypp.conf
+    block: |
+      multiversion = provides:multiversion(kernel)
+      multiversion.kernels = latest
+
+- name: Ensure LIVEPATCH_KERNEL is always set
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/livepatching
+    line: LIVEPATCH_KERNEL='always'
+    create: yes
+
+- name: Install kernel-default-livepatch
+  ansible.builtin.package:
+    name: kernel-default-livepatch
+    state: present
