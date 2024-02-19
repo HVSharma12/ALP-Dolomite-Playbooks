@@ -1,5 +1,4 @@
 ---
-
 - name: Include monitoring_system.yml if monitoring_system is true
   ansible.builtin.include_tasks: monitoring_system.yml
   when: monitoring_system|bool
@@ -10,3 +9,7 @@
 - name: Include control_client.yml if monitoring_system is not true
   ansible.builtin.include_tasks: control_client.yml
   when: not monitoring_system|bool
+
+- name: Include create_systemd.yml if generate_systemd is true
+  ansible.builtin.include_tasks: create_systemd.yml
+  when: generate_systemd|bool

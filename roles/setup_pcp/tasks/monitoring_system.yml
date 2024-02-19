@@ -15,8 +15,14 @@
 
 - name: Retrieve image for PCP
   containers.podman.podman_image:
-    name: "{{ pcp_container_name }}"
+    name: "{{ pcp_image }}"
     state: present
+
+- name: Create a pod for pcp containers
+  containers.podman.podman_pod:
+    name: "{{ pcp_container_name }}"
+    state: "{{ pcp_container_state | default('created') }}"
+  run_once: true
 
 - name: Run PCP container with custom configurations
   containers.podman.podman_container:
@@ -29,20 +35,7 @@
     volumes:
       - "{{ pcp_archives_dir }}:/var/log/pcp/pmlogger:z"
       - "{{ pcp_archives_dir }}/{{ client }}/control.{{ client }}:/etc/pcp/pmlogger/control.d/local:z"
-    state: "{{ pcp_container_state | default('started') }}"
+    state: "{{ pcp_container_state | default('created') }}"
     restart_policy: always
-    generate_systemd: "{{ {'path': '/etc/systemd/system/', 'restart_policy': 'always', 'names': true} if generate_systemd else omit }}"
+    pod: "{{ pcp_container_name }}"
   register: create_container
-
-- name: Reload systemd to recognize new units
-  ansible.builtin.systemd:
-    daemon_reload: true
-  when: create_container is changed and generate_systemd
-
-- name: Enable and start systemd service for PCP container
-  ansible.builtin.systemd:
-    name: "container-{{ pcp_container_name }}-{{ client }}"
-    enabled: true
-    state: started
-  when: create_container is changed and generate_systemd
-# to-do add options for custom pmcd deamon config

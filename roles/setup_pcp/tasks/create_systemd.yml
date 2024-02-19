@@ -1,0 +1,12 @@
+---
+- name: Generate systemd unit file for pcp pod
+  containers.podman.podman_generate_systemd:
+    name: "{{ pcp_container_name }}"
+    dest: /etc/systemd/system
+
+- name: Enable and start systemd service for PCP container
+  ansible.builtin.systemd:
+    name: "pod-{{ pcp_container_name }}"
+    enabled: true
+    state: started
+    daemon_reload: true

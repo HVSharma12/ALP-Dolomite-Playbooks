@@ -4,7 +4,9 @@
   become: true
   vars:
     monitoring_system: true
-    generate_systemd: false
-    pcp_clients: []
+    generate_systemd: true
+    pcp_clients:
+      - 192.168.122.2
+      - 192.168.122.63
   roles:
-    - role: pcp_container
+    - role: setup_pcp
