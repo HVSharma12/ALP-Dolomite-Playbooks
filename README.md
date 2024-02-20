@@ -1,6 +1,6 @@
-# ALP-Dolomite-Playbooks
+# sle-micro-playbooks
 
-This repository contains a collection of Ansible playbooks and roles for configuring ALP-Dolomite systems. These playbooks are designed to automate various tasks and configurations on ALP-Dolomite environments.
+This repository contains a collection of Ansible playbooks and roles for configuring sle-micro systems. These playbooks are designed to automate various tasks and configurations on sle-micro environments.
 
 ## Playbooks
 
