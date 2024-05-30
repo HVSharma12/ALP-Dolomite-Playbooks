@@ -1,6 +1,6 @@
-# sle-micro-playbooks
+# os-management-ansible
 
-This repository contains a collection of Ansible playbooks and roles for configuring sle-micro systems. These playbooks are designed to automate various tasks and configurations on sle-micro environments.
+This repository contains a collection of Ansible playbooks and roles for configuring SL Micro, SLES, and SLES systems. These playbooks are designed to automate various tasks and configurations in these environments, ensuring efficient and consistent OS management.
 
 ## Playbooks
 
